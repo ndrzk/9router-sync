@@ -14,17 +14,26 @@ Two-way sync of [9router](https://github.com/decolua/9router) `providerConnectio
 
 ## Install
 
+One-liner (macOS / Linux):
+
 ```bash
-npm i -g 9router-sync
+curl -fsSL https://raw.githubusercontent.com/alfianriv/9router-sync/main/install.sh | bash
 ```
 
-Or from source:
+The installer copies the package into `~/.9router-sync/`, runs `npm install` so `better-sqlite3` is built against your local Node, and symlinks the CLI into `~/.local/bin/9router-sync` (override with `PREFIX=…`).
+
+From a clone:
 
 ```bash
-git clone https://github.com/YOU/9router-sync.git
+git clone https://github.com/alfianriv/9router-sync.git
 cd 9router-sync
-npm i
-npm link
+./install.sh
+```
+
+Uninstall:
+
+```bash
+~/.9router-sync/uninstall.sh   # or: curl -fsSL https://raw.githubusercontent.com/alfianriv/9router-sync/main/uninstall.sh | bash
 ```
 
 ## Setup
