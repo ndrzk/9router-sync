@@ -28,7 +28,7 @@ if (-not $nodeCmd) {
     die "node not found in PATH (need Node.js >= 18)"
 }
 
-$nodeMajor = [int](node -p 'process.versions.node.split(".")[0]')
+$nodeMajor = [int](node -p "process.versions.node.split('.')[0]")
 if ($nodeMajor -lt 18) {
     die "node $(node -v) too old (need >= 18)"
 }
