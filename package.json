@@ -10,7 +10,10 @@
     "bin",
     "lib",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "install.ps1",
+    "uninstall.ps1",
+    "9router-sync.cmd"
   ],
   "engines": {
     "node": ">=18"

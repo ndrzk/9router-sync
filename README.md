@@ -36,6 +36,32 @@ Uninstall:
 ~/.9router-sync/uninstall.sh   # or: curl -fsSL https://raw.githubusercontent.com/alfianriv/9router-sync/main/uninstall.sh | bash
 ```
 
+### Windows
+
+One-liner (PowerShell):
+
+```powershell
+iwr -useb https://raw.githubusercontent.com/alfianriv/9router-sync/main/install.ps1 | iex
+```
+
+> If you get a script execution error, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` first.
+
+The installer copies the package into `%USERPROFILE%\.9router-sync\`, runs `npm install`, and creates a wrapper script at `%USERPROFILE%\.local\bin\9router-sync.cmd`.
+
+From a clone:
+
+```powershell
+git clone https://github.com/alfianriv/9router-sync.git
+cd 9router-sync
+.\install.ps1
+```
+
+Uninstall:
+
+```powershell
+~/.9router-sync/uninstall.ps1   # or: iwr -useb https://raw.githubusercontent.com/alfianriv/9router-sync/main/uninstall.ps1 | iex
+```
+
 ## Setup
 
 1. Print the config template and the Supabase schema:
@@ -44,7 +70,7 @@ Uninstall:
    9router-sync --init
    ```
 
-2. Save the JSON template as `~/.9router/sync.json` and fill in your project URL and an API key:
+2. Save the JSON template as `~/.9router/sync.json` (macOS/Linux) or `%USERPROFILE%\.9router\sync.json` (Windows) and fill in your project URL and an API key:
 
    ```json
    {
