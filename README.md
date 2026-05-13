@@ -17,7 +17,7 @@ Two-way sync of [9router](https://github.com/decolua/9router) `providerConnectio
 One-liner (macOS / Linux):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/alfianriv/9router-sync/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ndrzk/9router-sync/main/install.sh | bash
 ```
 
 The installer copies the package into `~/.9router-sync/`, runs `npm install` so `better-sqlite3` is built against your local Node, and symlinks the CLI into `~/.local/bin/9router-sync` (override with `PREFIX=…`).
@@ -25,7 +25,7 @@ The installer copies the package into `~/.9router-sync/`, runs `npm install` so 
 From a clone:
 
 ```bash
-git clone https://github.com/alfianriv/9router-sync.git
+git clone https://github.com/ndrzk/9router-sync.git
 cd 9router-sync
 ./install.sh
 ```
@@ -33,7 +33,7 @@ cd 9router-sync
 Uninstall:
 
 ```bash
-~/.9router-sync/uninstall.sh   # or: curl -fsSL https://raw.githubusercontent.com/alfianriv/9router-sync/main/uninstall.sh | bash
+~/.9router-sync/uninstall.sh   # or: curl -fsSL https://raw.githubusercontent.com/ndrzk/9router-sync/main/uninstall.sh | bash
 ```
 
 ### Windows
@@ -41,7 +41,7 @@ Uninstall:
 One-liner (PowerShell):
 
 ```powershell
-iwr -useb https://raw.githubusercontent.com/alfianriv/9router-sync/main/install.ps1 | iex
+iwr -useb https://raw.githubusercontent.com/ndrzk/9router-sync/main/install.ps1 | iex
 ```
 
 > If you get a script execution error, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` first.
@@ -51,7 +51,7 @@ The installer copies the package into `%USERPROFILE%\.9router-sync\`, runs `npm 
 From a clone:
 
 ```powershell
-git clone https://github.com/alfianriv/9router-sync.git
+git clone https://github.com/ndrzk/9router-sync.git
 cd 9router-sync
 .\install.ps1
 ```
@@ -59,7 +59,7 @@ cd 9router-sync
 Uninstall:
 
 ```powershell
-~/.9router-sync/uninstall.ps1   # or: iwr -useb https://raw.githubusercontent.com/alfianriv/9router-sync/main/uninstall.ps1 | iex
+~/.9router-sync/uninstall.ps1   # or: iwr -useb https://raw.githubusercontent.com/ndrzk/9router-sync/main/uninstall.ps1 | iex
 ```
 
 ## Setup
