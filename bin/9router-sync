@@ -9,7 +9,6 @@
 
 import {
   loadConfig,
-  openDb,
   getDeviceId,
   supaRequest,
   rowToRemote,
@@ -21,6 +20,10 @@ import {
   CONFIG_PATH,
   CONFIG_TEMPLATE,
 } from '../lib/sync-lib.mjs';
+import {
+  readProviderConnections,
+  writeProviderConnections,
+} from '../lib/db-handler.mjs';
 
 const args = parseArgs(process.argv);
 if (args.help) {
@@ -38,79 +41,55 @@ if (args.init) {
 }
 
 const cfg = loadConfig();
-const db = openDb(false);
-try {
-  const deviceId = getDeviceId(db);
-  const localRows = db.prepare('SELECT * FROM providerConnections').all();
-  const localMap = new Map(localRows.map((r) => [r.id, r]));
-  const remoteRows = await supaRequest(cfg, 'GET', `${cfg.table}?select=*`);
-  const remoteMap = new Map(remoteRows.map((r) => [r.id, r]));
+const deviceId = getDeviceId();
+const localRows = readProviderConnections();
+const localMap = new Map(localRows.map((r) => [r.id, r]));
+const remoteRows = await supaRequest(cfg, 'GET', `${cfg.table}?select=*`);
+const remoteMap = new Map(remoteRows.map((r) => [r.id, r]));
 
-  const toPush = []; // local -> remote
-  const toPull = []; // remote -> local (as sqlite rows)
-  const ids = new Set([...localMap.keys(), ...remoteMap.keys()]);
+const toPush = []; // local -> remote
+const toPull = []; // remote -> local (as sqlite rows)
+const ids = new Set([...localMap.keys(), ...remoteMap.keys()]);
 
-  for (const id of ids) {
-    const l = localMap.get(id);
-    const r = remoteMap.get(id);
-    if (l && !r) {
-      toPush.push(rowToRemote(l, deviceId));
-      continue;
-    }
-    if (r && !l) {
-      toPull.push(remoteToRow(r));
-      continue;
-    }
-    const lt = ts(l.updatedAt);
-    const rt = ts(r.updated_at);
-    if (lt > rt) toPush.push(rowToRemote(l, deviceId));
-    else if (rt > lt) toPull.push(remoteToRow(r));
+for (const id of ids) {
+  const l = localMap.get(id);
+  const r = remoteMap.get(id);
+  if (l && !r) {
+    toPush.push(rowToRemote(l, deviceId));
+    continue;
+  }
+  if (r && !l) {
+    toPull.push(remoteToRow(r));
+    continue;
+  }
+  const lt = ts(l.updatedAt);
+  const rt = ts(r.updated_at);
+  if (lt > rt) toPush.push(rowToRemote(l, deviceId));
+  else if (rt > lt) toPull.push(remoteToRow(r));
+}
+
+if (toPush.length === 0 && toPull.length === 0) {
+  console.log('sync: already in sync');
+} else {
+  if (toPush.length) {
+    console.log(`push ${toPush.length} -> supabase`);
+    for (const r of toPush)
+      console.log(`  \u2191 ${label(r.provider, r.name, r.id)}`);
+  }
+  if (toPull.length) {
+    console.log(`pull ${toPull.length} <- supabase`);
+    for (const r of toPull)
+      console.log(`  \u2193 ${label(r.provider, r.name, r.id)}`);
   }
 
-  if (toPush.length === 0 && toPull.length === 0) {
-    console.log('sync: already in sync');
+  if (args.dryRun) {
+    console.log('(dry-run, no changes applied)');
   } else {
-    if (toPush.length) {
-      console.log(`push ${toPush.length} -> supabase`);
-      for (const r of toPush)
-        console.log(`  \u2191 ${label(r.provider, r.name, r.id)}`);
-    }
+    if (toPush.length) await supaRequest(cfg, 'POST', cfg.table, toPush);
+
     if (toPull.length) {
-      console.log(`pull ${toPull.length} <- supabase`);
-      for (const r of toPull)
-        console.log(`  \u2193 ${label(r.provider, r.name, r.id)}`);
-    }
-
-    if (args.dryRun) {
-      console.log('(dry-run, no changes applied)');
-    } else {
-      if (toPush.length) await supaRequest(cfg, 'POST', cfg.table, toPush);
-
-      if (toPull.length) {
-        const upsert = db.prepare(`
-          INSERT INTO providerConnections
-            (id, provider, authType, name, email, priority, isActive, data, createdAt, updatedAt)
-          VALUES
-            (@id, @provider, @authType, @name, @email, @priority, @isActive, @data, @createdAt, @updatedAt)
-          ON CONFLICT(id) DO UPDATE SET
-            provider  = excluded.provider,
-            authType  = excluded.authType,
-            name      = excluded.name,
-            email     = excluded.email,
-            priority  = excluded.priority,
-            isActive  = excluded.isActive,
-            data      = excluded.data,
-            createdAt = excluded.createdAt,
-            updatedAt = excluded.updatedAt
-        `);
-        const tx = db.transaction(() => {
-          for (const r of toPull) upsert.run(r);
-        });
-        tx();
-        console.log('\nrestart 9router to pick up pulled changes.');
-      }
+      writeProviderConnections(toPull);
+      console.log('\nrestart 9router to pick up pulled changes.');
     }
   }
-} finally {
-  db.close();
 }
