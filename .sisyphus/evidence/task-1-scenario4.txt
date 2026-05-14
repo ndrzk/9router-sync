@@ -1,0 +1,38 @@
+QA Scenario 4: Error Handling Test
+===================================
+Date: 2026-05-13
+
+Test Execution:
+node .sisyphus/test-temp/test-errors.mjs
+
+Output:
+=== ERROR HANDLING TEST ===
+Platform: windows
+Expected DB path: C:\Users\trustfear\AppData\Roaming\9router\db.json
+
+--- Test 1: readProviderConnections with missing DB ---
+Caught expected error: Windows database not found: C:\Users\trustfear\AppData\Roaming\9router\db.json
+PASS: Error message mentions "not found"
+
+--- Test 2: writeProviderConnections creates file if missing ---
+PASS: writeProviderConnections created new file
+File exists: true
+Read back rows: 1
+Row data: {"apiKey":"test-key"}
+
+--- Test 3: Corrupted JSON handling (Windows only) ---
+Created corrupted JSON at: C:\Users\trustfear\AppData\Roaming\9router\db.json
+Caught expected error: Failed to parse Windows database: Expected property name or '}' in JSON at position 2 (line 1 column 3)
+PASS: Error message indicates parse failure
+
+--- Test 4: Invalid structure (missing providerConnections array) ---
+Caught expected error: Invalid Windows database: missing or invalid providerConnections array
+PASS: Error message indicates invalid structure
+
+=== ERROR HANDLING TEST COMPLETE ===
+
+Result: PASSED
+- Missing DB: readProviderConnections throws clear "not found" error
+- Missing DB (write): Windows creates new file, Unix throws error
+- Corrupted JSON: Clear parse error with JSON position info
+- Invalid structure: Clear error about missing providerConnections array

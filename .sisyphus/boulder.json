@@ -1,0 +1,23 @@
+{
+  "active_plan": "D:\\ndrzk\\Project New\\9router-sync\\.sisyphus\\plans\\fix-json-merge-bug.md",
+  "started_at": "2026-05-14T07:33:11.024Z",
+  "session_ids": [
+    "ses_1df0c354afferu567I6ZLjTTLJ"
+  ],
+  "session_origins": {
+    "ses_1df0c354afferu567I6ZLjTTLJ": "direct"
+  },
+  "plan_name": "fix-json-merge-bug",
+  "agent": "atlas",
+  "task_sessions": {
+    "todo:1": {
+      "task_key": "todo:1",
+      "task_label": "1",
+      "task_title": "Add mergeRowsById helper + update writeProviderConnections JSDoc",
+      "session_id": "ses_1da975edeffeltmG4RvdxZ7DIh",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-05-14T07:43:30.580Z"
+    }
+  }
+}

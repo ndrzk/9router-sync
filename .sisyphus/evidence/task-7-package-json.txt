@@ -1,0 +1,33 @@
+TASK 7 EVIDENCE: Update package.json files array
+================================================
+
+Date: 2026-05-13
+Status: COMPLETED
+
+VERIFICATION OUTPUT:
+-------------------
+package.json files array now contains:
+  "files": [
+    "bin",
+    "lib",
+    "README.md",
+    "LICENSE",
+    "install.ps1",
+    "uninstall.ps1",
+    "9router-sync.cmd"
+  ],
+
+CHANGES MADE:
+-------------
+- Added "install.ps1" to files array
+- Added "uninstall.ps1" to files array
+- Added "9router-sync.cmd" to files array
+- Preserved existing entries: bin, lib, README.md, LICENSE
+
+VALIDATION:
+-----------
+✓ Valid JSON syntax (verified by reading file)
+✓ All existing entries preserved
+✓ Windows scripts added as requested
+✓ No version change
+✓ No dependency changes

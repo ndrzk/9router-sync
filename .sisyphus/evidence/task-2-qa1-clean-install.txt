@@ -1,0 +1,31 @@
+﻿QA SCENARIO 1: Clean Install Verification
+==========================================
+Date: 2026-05-13 10:11:30
+Node.js: v24.14.1
+OS: Windows
+
+Check 1: install.ps1 exists
+PASS: install.ps1 created
+
+Check 2: uninstall.ps1 exists
+PASS: uninstall.ps1 created
+
+Check 3: 9router-sync.cmd wrapper exists
+PASS: 9router-sync.cmd created
+
+Check 4: Node.js version check present
+PASS: Node >= 18 check present
+
+Check 5: npm check present
+PASS: npm check present
+
+Check 6: PATH check present
+PASS: PATH check present
+
+Check 7: Next steps output present
+PASS: Next steps output present
+
+Check 8: CLI wrapper respects APP_DIR env var
+PASS: APP_DIR env var support in wrapper
+
+RESULT: All checks passed

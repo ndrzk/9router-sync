@@ -1,0 +1,92 @@
+QA Scenario 2: Windows JSON Read/Write Test
+=============================================
+Date: 2026-05-13
+
+Test Execution:
+node .sisyphus/test-temp/test-transform.mjs
+
+Output:
+=== INPUT ROW (Windows JSON format) ===
+{
+  "id": "test-id-123",
+  "provider": "ollama",
+  "authType": "apikey",
+  "name": "Test Ollama",
+  "priority": 1,
+  "isActive": true,
+  "createdAt": "2026-04-21T10:43:52.932Z",
+  "updatedAt": "2026-04-21T10:59:35.149Z",
+  "apiKey": "test-api-key-123",
+  "testStatus": "available",
+  "providerSpecificData": {
+    "connectionProxyEnabled": false
+  },
+  "modelLock_kimi": null,
+  "lastError": "[429]: rate limited"
+}
+
+=== NORMALIZED ROW (SQLite format) ===
+{
+  "id": "test-id-123",
+  "provider": "ollama",
+  "authType": "apikey",
+  "name": "Test Ollama",
+  "email": null,
+  "priority": 1,
+  "isActive": true,
+  "data": "{\"apiKey\":\"test-api-key-123\",\"testStatus\":\"available\",\"providerSpecificData\":{\"connectionProxyEnabled\":false},\"modelLock_kimi\":null,\"lastError\":\"[429]: rate limited\"}",
+  "createdAt": "2026-04-21T10:43:52.932Z",
+  "updatedAt": "2026-04-21T10:59:35.149Z"
+}
+
+=== PARSED DATA FIELD (contains extra fields) ===
+{
+  "apiKey": "test-api-key-123",
+  "testStatus": "available",
+  "providerSpecificData": {
+    "connectionProxyEnabled": false
+  },
+  "modelLock_kimi": null,
+  "lastError": "[429]: rate limited"
+}
+
+=== ROUND-TRIP (back to Windows format) ===
+{
+  "id": "test-id-123",
+  "provider": "ollama",
+  "authType": "apikey",
+  "name": "Test Ollama",
+  "email": null,
+  "priority": 1,
+  "isActive": true,
+  "createdAt": "2026-04-21T10:43:52.932Z",
+  "updatedAt": "2026-04-21T10:59:35.149Z",
+  "apiKey": "test-api-key-123",
+  "testStatus": "available",
+  "providerSpecificData": {
+    "connectionProxyEnabled": false
+  },
+  "modelLock_kimi": null,
+  "lastError": "[429]: rate limited"
+}
+
+=== VERIFICATION ===
+Original keys: apiKey, authType, createdAt, id, isActive, lastError, modelLock_kimi, name, priority, provider, providerSpecificData, testStatus, updatedAt
+Roundtrip keys: apiKey, authType, createdAt, email, id, isActive, lastError, modelLock_kimi, name, priority, provider, providerSpecificData, testStatus, updatedAt
+
+Field-by-field check:
+  id: PASS
+  provider: PASS
+  apiKey: PASS
+  testStatus: PASS
+  providerSpecificData: PASS
+  lastError: PASS
+  modelLock_kimi: PASS
+
+Test PASSED: true
+
+Result: PASSED
+- Windows JSON read correctly transforms flat structure to normalized
+- Extra fields (apiKey, testStatus, providerSpecificData, modelLock_*, lastError) packed into `data` JSON string
+- Windows JSON write correctly unpacks `data` JSON string to top-level fields
+- Round-trip preserves all fields and values

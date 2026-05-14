@@ -1,0 +1,32 @@
+QA Scenario 3: Unix SQLite Read/Write Test
+============================================
+Date: 2026-05-13
+
+Test Execution:
+node -e "
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { homedir } from 'node:os';
+
+const UNIX_DB_PATH = join(homedir(), '.9router', 'db', 'data.sqlite');
+console.log('Unix SQLite path:', UNIX_DB_PATH);
+console.log('File exists:', existsSync(UNIX_DB_PATH));
+"
+
+Output:
+Unix SQLite path: C:\Users\trustfear\.9router\db\data.sqlite
+File exists: false
+
+Result: SKIPPED (Unix SQLite database not present on Windows)
+- Unix SQLite path correctly constructed: %USERPROFILE%\.9router\db\data.sqlite
+- File does not exist on this Windows machine (expected)
+- Code review confirms SQLite read/write logic follows existing sync-lib.mjs patterns:
+  - Uses better-sqlite3 with same loadBetterSqlite() candidates
+  - SELECT * FROM providerConnections matches existing pattern
+  - INSERT ... ON CONFLICT(id) DO UPDATE matches existing upsert pattern
+  - Transaction wrapping with db.transaction() matches existing pattern
+
+Code verification for Unix SQLite read/write:
+- readUnixite(): Opens database readonly, executes SELECT, returns rows, closes connection
+- writeUnixite(): Opens database read/write, prepares upsert, wraps in transaction, executes, closes
+- All patterns match sync-lib.mjs lines 96-100 (openDb), 44 (SELECT), 90-109 (upsert/transaction)

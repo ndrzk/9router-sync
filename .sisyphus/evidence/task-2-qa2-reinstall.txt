@@ -1,0 +1,26 @@
+﻿QA SCENARIO 2: Reinstall Over Existing Verification
+====================================================
+Date: 2026-05-13 10:13:27
+
+Check 1: install.ps1 removes existing files before copying
+PASS: Lines 87-88 remove existing files before copy
+
+Check 2: install.ps1 uses -Force on Copy-Item
+PASS: Uses -Force for overwrite
+
+Check 3: install.ps1 creates APP_DIR if missing
+PASS: Line 81 creates APP_DIR if missing
+
+Check 4: install.ps1 creates PREFIX if missing
+PASS: Line 115-117 creates PREFIX if missing
+
+Check 5: Wrapper handles existing installation gracefully
+PASS: Lines 119-121 remove existing wrapper before copy
+
+Check 6: uninstall.ps1 removes APP_DIR
+PASS: Uninstall removes APP_DIR completely
+
+VERIFICATION: Code review confirms all reinstall scenarios handled
+Line 119: if (Test-Path $dstWrapper) { Remove-Item $dstWrapper -Force }
+
+RESULT: All checks passed - reinstall scenario handled correctly
