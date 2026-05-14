@@ -7,7 +7,7 @@
 # Env overrides:
 #   PREFIX     install dir for the symlinked binary (default: ~/.local/bin, or /usr/local/bin if writable and on PATH)
 #   APP_DIR    where the package lives  (default: ~/.9router-sync)
-#   REPO_URL   git repo to clone if not running from a local checkout (default: https://github.com/alfianriv/9router-sync.git)
+#   REPO_URL   git repo to clone if not running from a local checkout (default: https://github.com/ndrzk/9router-sync.git)
 #   REF        git ref to check out                                   (default: main)
 
 set -euo pipefail
@@ -62,7 +62,7 @@ mkdir -p "$PREFIX"
 # ---------- locate sources (local checkout vs remote clone) -----------------
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]:-$0}")" >/dev/null 2>&1 && pwd -P || true)
 
-REPO_URL=${REPO_URL:-"https://github.com/alfianriv/9router-sync.git"}
+REPO_URL=${REPO_URL:-"https://github.com/ndrzk/9router-sync.git"}
 REF=${REF:-main}
 
 if [ -n "$SCRIPT_DIR" ] && [ -f "$SCRIPT_DIR/package.json" ] && [ -f "$SCRIPT_DIR/bin/9router-sync" ]; then
