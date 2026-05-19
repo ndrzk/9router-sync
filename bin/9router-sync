@@ -28,8 +28,9 @@ import {
 const args = parseArgs(process.argv);
 if (args.help) {
   console.log(
-    'usage: 9router-sync [--dry-run] [--init]\n' +
+    'usage: 9router-sync [--dry-run] [--pull-only] [--init]\n' +
       '  two-way merge of providerConnections with Supabase.\n' +
+      '  --pull-only applies only Supabase -> local changes.\n' +
       '  newer updatedAt wins. restart 9router after a pull to pick up changes.',
   );
   process.exit(0);
@@ -71,7 +72,7 @@ for (const id of ids) {
 if (toPush.length === 0 && toPull.length === 0) {
   console.log('sync: already in sync');
 } else {
-  if (toPush.length) {
+  if (toPush.length && !args.pullOnly) {
     console.log(`push ${toPush.length} -> supabase`);
     for (const r of toPush)
       console.log(`  \u2191 ${label(r.provider, r.name, r.id)}`);
@@ -85,7 +86,9 @@ if (toPush.length === 0 && toPull.length === 0) {
   if (args.dryRun) {
     console.log('(dry-run, no changes applied)');
   } else {
-    if (toPush.length) await supaRequest(cfg, 'POST', cfg.table, toPush);
+    if (toPush.length && !args.pullOnly) {
+      await supaRequest(cfg, 'POST', cfg.table, toPush);
+    }
 
     if (toPull.length) {
       writeProviderConnections(toPull);
